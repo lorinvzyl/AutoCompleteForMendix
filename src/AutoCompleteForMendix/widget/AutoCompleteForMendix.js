@@ -1051,7 +1051,10 @@ define( [
 
         _execMf: function (guid, mf, cb, showProgress, message) {
             var self = this;
-            if (guid && mf) {                
+            if (guid && mf) {   
+                if(showProgress){    
+                    var progressId = window.mx.ui.showProgress(message, true);  
+                }             
                 var options = {
                     params: {
                         applyto: 'selection',
@@ -1062,15 +1065,16 @@ define( [
                         if (cb) {
                             cb(objs);
                         }
+                        if(showProgress){         
+                            mx.ui.hideProgress(progressId);
+                        }
                     },
                     error: function (e) {
                         mx.logger.error('Error running Microflow: ' + e);
+                        if(showProgress){         
+                            mx.ui.hideProgress(progressId);
+                        }
                     }
-                }
-
-                if(showProgress){                    
-                    options.progress = "modal";
-                    options.progressMsg = message;
                 }
 
                 //mx.ui.action(mf,options, this);
